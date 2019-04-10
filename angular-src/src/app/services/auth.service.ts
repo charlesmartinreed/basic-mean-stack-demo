@@ -26,4 +26,27 @@ export class AuthService {
       .post("http://localhost:3000/users/register", user, httpOptions)
       .pipe(map((res: any) => res));
   }
+
+  authenticateUser(user) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json"
+      })
+    };
+    // if successful, returns token to store and user info
+    return this.http
+      .post("http://localhost:3000/users/authenticate", user, httpOptions)
+      .pipe(map((res: any) => res));
+  }
+
+  storeUserData(token, user) {
+    // id_token is what JWT looks for when we auth with passport
+    localStorage.setItem("id_token", token);
+    // localStorage can only store a string, so we need to convert
+    localStorage.setItem("user", JSON.stringify(user));
+
+    // set our property values
+    this.authToken = token;
+    this.user = user;
+  }
 }
