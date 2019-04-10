@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ValidateService } from "../../services/validate.service";
 import { FlashMessagesService } from "angular2-flash-messages";
+import { AuthService } from "../../services/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-register",
@@ -17,7 +19,9 @@ export class RegisterComponent implements OnInit {
   // inject service
   constructor(
     private validateService: ValidateService,
-    private flashMessage: FlashMessagesService
+    private flashMessage: FlashMessagesService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {}
@@ -52,5 +56,22 @@ export class RegisterComponent implements OnInit {
       return false;
     }
     console.log("submission complete");
+
+    // Register a user - subscribe because it's an observable
+    this.authService.registerUser(user).subscribe(data => {
+      if (data.success) {
+        this.flashMessage.show("You are now registered and can log in", {
+          cssClass: "alert-success"
+        });
+        //redirect
+        this.router.navigate(["/login"]);
+      } else {
+        this.flashMessage.show("Unable to register. Please try again.", {
+          cssClass: "alert-danger"
+        });
+        //redirect
+        this.router.navigate(["/register"]);
+      }
+    });
   }
 }
