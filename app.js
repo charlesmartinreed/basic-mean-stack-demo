@@ -27,11 +27,17 @@ const app = express(),
 const users = require("./routes/users");
 // MIDDLEWARE SETUP
 
-// BodyParser
+// BODYPARSER
 app.use(express.json());
 
 // CORS - we want any domain to be able to access this, we'll cover our tracks with auth
 app.use(cors());
+
+// PASSPORT
+app.use(passport.initialize());
+app.use(passport.session());
+
+require("./config/passport")(passport);
 
 // SET STATIC FOLDER for serving assets
 app.use(express.static("public"));
