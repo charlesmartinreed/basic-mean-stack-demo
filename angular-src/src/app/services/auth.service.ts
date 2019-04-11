@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Injectable({
   providedIn: "root"
@@ -11,7 +12,8 @@ export class AuthService {
   authToken: any;
   user: any;
 
-  constructor(private http: HttpClient) {}
+  //public jwtHelper: JwtHelperService
+  constructor(private http: HttpClient, public jwtHelper: JwtHelperService) {}
 
   registerUser(user) {
     // make a post request to register
@@ -45,7 +47,7 @@ export class AuthService {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
-        Authorization: `${this.authToken}`
+        Authorization: this.authToken
       })
     };
     return this.http
@@ -67,6 +69,12 @@ export class AuthService {
   loadToken() {
     const token = localStorage.getItem("id_token");
     this.authToken = token;
+  }
+
+  // Uses angular2-jwt to determine whether or not the user is loggedIn
+  loggedIn() {
+    // if you don't pass the token, jwt assumes the default one, which has a name of 'token' whereas we set the token to id_token in local storage...
+    return this.jwtHelper.isTokenExpired(this.authToken);
   }
 
   logout() {
