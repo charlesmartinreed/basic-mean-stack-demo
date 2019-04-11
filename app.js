@@ -22,7 +22,7 @@ db.on("error", err => {
 });
 
 const app = express(),
-  port = process.env.PORT || 3000;
+  port = process.env.PORT || 8080;
 
 const users = require("./routes/users");
 // MIDDLEWARE SETUP
@@ -44,6 +44,12 @@ app.use(express.static("public"));
 
 // ROUTES
 app.use("/users", users);
+
+// catch-all ROUTE
+app.get("*", (req, res) => {
+  console.log("not valid");
+  res.sendFile(path.join(__dirname, "public/index.html"));
+});
 
 // Index ROUTE
 app.get("/", (req, res, body) => {

@@ -25,7 +25,7 @@ export class AuthService {
 
     // return an observable - we subscribe to this with rxjs
     return this.http
-      .post("http://localhost:3000/users/register", user, httpOptions)
+      .post("users/register", user, httpOptions)
       .pipe(map((res: any) => res));
   }
 
@@ -37,7 +37,7 @@ export class AuthService {
     };
     // if successful, returns token to store and user info
     return this.http
-      .post("http://localhost:3000/users/authenticate", user, httpOptions)
+      .post("users/authenticate", user, httpOptions)
       .pipe(map((res: any) => res));
   }
 
@@ -51,7 +51,7 @@ export class AuthService {
       })
     };
     return this.http
-      .get("http://localhost:3000/users/profile", httpOptions)
+      .get("users/profile", httpOptions)
       .pipe(map((res: any) => res));
   }
 
