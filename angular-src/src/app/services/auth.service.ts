@@ -39,6 +39,20 @@ export class AuthService {
       .pipe(map((res: any) => res));
   }
 
+  getProfile() {
+    // using our loadToken method to fetch token from localStorage
+    this.loadToken();
+    const httpOptions = {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Authorization: `${this.authToken}`
+      })
+    };
+    return this.http
+      .get("http://localhost:3000/users/profile", httpOptions)
+      .pipe(map((res: any) => res));
+  }
+
   storeUserData(token, user) {
     // id_token is what JWT looks for when we auth with passport
     localStorage.setItem("id_token", token);
@@ -48,6 +62,11 @@ export class AuthService {
     // set our property values
     this.authToken = token;
     this.user = user;
+  }
+
+  loadToken() {
+    const token = localStorage.getItem("id_token");
+    this.authToken = token;
   }
 
   logout() {
